@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Repository Files</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
+      color: #333;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      color: #0366d6;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: white;
+      margin: 0.5rem 0;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    a {
+      text-decoration: none;
+      color: #0366d6;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .loading {
+      font-style: italic;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+  <h1>📁 GitHub Repository Files</h1>
+  <p>Below are all files in the repository:</p>
+  <div id="file-list" class="loading">Loading files...</div>
+
+  <script>
+    // 🧠 EDIT THESE:
+    const owner = "amargineanu";
+    const repo = "Single-page-Games-and-Apps";
+    const branch = "main"; // or "master" if applicable
+
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/`;
+
+    async function fetchFiles() {
+      const fileListDiv = document.getElementById("file-list");
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Failed to fetch repo contents");
+        const files = await response.json();
+
+        let listHTML = "<ul>";
+        files.forEach(file => {
+          if (file.type === "file") {
+            listHTML += `
+              <li>
+                <a href="${file.html_url}" target="_blank">${file.name}</a>
+              </li>
+            `;
+          } else if (file.type === "dir") {
+            listHTML += `
+              <li>📂 <strong>${file.name}</strong> (directory)</li>
+            `;
+          }
+        });
+        listHTML += "</ul>";
+        fileListDiv.innerHTML = listHTML;
+      } catch (err) {
+        fileListDiv.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+      }
+    }
+
+    fetchFiles();
+  </script>
+</body>
+</html>
