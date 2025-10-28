@@ -49,7 +49,7 @@
 
     .board-wrap{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:16px;padding:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
 
-    .board{display:grid;grid-template-columns:repeat(3,1fr);grid-gap:var(--gutter);touch-action:manipulation;justify-items:center;}
+    .board{display:grid;grid-template-columns:repeat(4,1fr);grid-gap:var(--gutter);touch-action:manipulation;justify-items:center;}
 
     .card{width:100%;aspect-ratio:1/1;position:relative;perspective:800px;-webkit-tap-highlight-color:transparent;}
     .card-inner{position:absolute;inset:0;border-radius:12px;transition:transform 420ms cubic-bezier(.2,.9,.3,1);transform-style:preserve-3d;box-shadow:0 6px 16px rgba(2,6,23,0.6);cursor:pointer;user-select:none;}
@@ -94,7 +94,7 @@
     </div>
 
     <footer>
-      <div class="muted">Pairs matched: <span id="matched">0</span>/9</div>
+      <div class="muted">Pairs matched: <span id="matched">0</span>/10</div>
       <div class="muted">Best: <span id="best">—</span></div>
     </footer>
   </div>
@@ -111,7 +111,7 @@
   <script>
     (function(){
       const ANIMALS = ['🦁','🐯','🐶','🐱','🐰','🦊','🐼','🐵','🐸','🐨','🐷','🐮','🐔','🦄','🐝','🐙','🦒','🐍'];
-      const PAIRS = 9; // 3x6 grid = 18 cards
+      const PAIRS = 10; // 4x5 grid = 20 cards
       const boardEl = document.getElementById('board');
       const movesEl = document.getElementById('moves');
       const timeEl = document.getElementById('time');
