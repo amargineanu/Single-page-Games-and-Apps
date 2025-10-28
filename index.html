@@ -66,7 +66,7 @@
           if (file.type === "file") {
             listHTML += `
               <li>
-                <a href="${file.html_url}" target="_blank">${file.name}</a>
+                <a href="https://${owner}.github.io/${repo}/${file.name}" target="_blank">${file.name}</a>
               </li>
             `;
           } else if (file.type === "dir") {
