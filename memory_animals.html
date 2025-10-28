@@ -3,15 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-  <title>Memory — Animal Tiles (Mobile Optimized)</title>
+  <title>Memory — Nature Tiles (Mobile Optimized)</title>
   <style>
     :root{
       --bg:#0f1724;
       --card:#0b1220;
       --accent:#ffd166;
       --muted:#94a3b8;
-      --success:#2dd4bf;
-      --gutter:10px;
       font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
     *{box-sizing:border-box}
@@ -20,162 +18,110 @@
       margin:0;
       background:linear-gradient(180deg,#071022 0%, var(--bg) 100%);
       color:#e6eef8;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:center;
       padding:22px 12px;
     }
 
-    .app{
-      width:100%;
-      max-width:480px;
-      display:flex;
-      flex-direction:column;
-      align-items:stretch;
-      gap:12px;
-    }
-
+    .app{width:100%;max-width:480px;display:flex;flex-direction:column;gap:12px;}
     header{display:flex;align-items:center;justify-content:space-between;gap:12px;}
     .brand{display:flex;gap:12px;align-items:center;}
     .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ff7b7b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#062434;font-size:22px;box-shadow:0 6px 18px rgba(0,0,0,0.4)}
     h1{margin:0;font-size:16px}
     p.lead{margin:0;color:var(--muted);font-size:12px}
-
     .controls{display:flex;gap:8px;align-items:center;}
     button.control{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.04);color:var(--accent);padding:8px 10px;border-radius:10px;font-weight:600;font-size:13px;min-width:44px}
     .info{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:13px}
-
     .board-wrap{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:16px;padding:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
-
-    .board{display:grid;grid-template-columns:repeat(4,1fr);grid-gap:var(--gutter);touch-action:manipulation;justify-items:center;}
-
-    .card{width:100%;aspect-ratio:1/1;position:relative;perspective:800px;-webkit-tap-highlight-color:transparent;}
+    .board{display:grid;grid-gap:10px;touch-action:manipulation;justify-items:center;}
+    .card{width:100%;aspect-ratio:1/1;position:relative;perspective:800px;}
     .card-inner{position:absolute;inset:0;border-radius:12px;transition:transform 420ms cubic-bezier(.2,.9,.3,1);transform-style:preserve-3d;box-shadow:0 6px 16px rgba(2,6,23,0.6);cursor:pointer;user-select:none;}
     .card.flipped .card-inner{transform:rotateY(180deg)}
-
     .face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:12px;backface-visibility:hidden;padding:8px;font-size:26px}
     .front{background:linear-gradient(180deg,#0b1220,#06111a);color:var(--muted);border:1px solid rgba(255,255,255,0.02);}
     .back{transform:rotateY(180deg);background:linear-gradient(180deg,#ffffff10,#ffffff06);font-size:36px;}
-
-    .matched .card-inner{transform:translateY(6px) scale(0.98)}
-
     footer{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
-
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(2,6,23,0.55),rgba(2,6,23,0.75));padding:22px}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(2,6,23,0.55),rgba(2,6,23,0.75));padding:22px;}
     .modal.show{display:flex}
     .dialog{background:linear-gradient(180deg,#06202b,#0b1a26);padding:18px;border-radius:16px;max-width:420px;width:100%;text-align:center}
     .dialog h2{margin:6px 0 0}
     .dialog p{color:var(--muted);font-size:14px}
+    .setup{display:flex;flex-direction:column;gap:10px;color:var(--muted);}
+    .number-picker{display:flex;justify-content:center;align-items:center;gap:8px;}
+    .number-picker button{background:var(--card);color:var(--accent);border:none;padding:6px 12px;border-radius:8px;font-size:18px;}
+    .theme-picker{display:flex;justify-content:space-around;gap:10px;}
+    .theme-option{display:flex;flex-direction:column;align-items:center;cursor:pointer;}
+    .theme-option span{font-size:36px;}
+    .theme-option label{font-size:13px;color:var(--muted);}
+    .theme-option input{display:none;}
+    .theme-option input:checked+span{transform:scale(1.3);}
   </style>
 </head>
 <body>
   <div class="app" id="app">
     <header>
-      <div class="brand">
-        <div class="logo">🐾</div>
-        <div>
-          <h1>Animal Memory</h1>
-          <p class="lead">Find matching animal pairs</p>
-        </div>
-      </div>
+      <div class="brand"><div class="logo">🌿</div><div><h1>Memory Game</h1><p class="lead">Find matching pairs</p></div></div>
       <div class="controls">
-        <div class="info" id="stats">
-          <div id="moves">Moves: 0</div>
-          <div id="time">Time: 0s</div>
-        </div>
+        <div class="info" id="stats"><div id="moves">Moves: 0</div><div id="time">Time: 0s</div></div>
         <button class="control" id="restart">Restart</button>
       </div>
     </header>
+    <div class="board-wrap"><div class="board" id="board"></div></div>
+    <footer><div>Pairs matched: <span id="matched">0</span>/<span id="totalPairs">—</span></div><div>Best: <span id="best">—</span></div></footer>
+  </div>
 
-    <div class="board-wrap">
-      <div class="board" id="board" aria-live="polite"></div>
+  <div class="modal" id="setupModal" style="display:flex;">
+    <div class="dialog">
+      <h2>Start Game</h2>
+      <div class="setup">
+        <label>Rows:</label>
+        <div class="number-picker"><button id="rowsMinus">-</button><span id="rowsVal">5</span><button id="rowsPlus">+</button></div>
+        <label>Columns:</label>
+        <div class="number-picker"><button id="colsMinus">-</button><span id="colsVal">4</span><button id="colsPlus">+</button></div>
+        <label>Theme:</label>
+        <div class="theme-picker">
+          <label class="theme-option"><input type="radio" name="theme" value="animals" checked><span>🐶</span><label>Animals</label></label>
+          <label class="theme-option"><input type="radio" name="theme" value="plants"><span>🌿</span><label>Plants</label></label>
+          <label class="theme-option"><input type="radio" name="theme" value="nature"><span>🌞</span><label>Nature</label></label>
+        </div>
+        <button class="control" id="startGame">Start</button>
+      </div>
     </div>
-
-    <footer>
-      <div class="muted">Pairs matched: <span id="matched">0</span>/10</div>
-      <div class="muted">Best: <span id="best">—</span></div>
-    </footer>
   </div>
 
   <div class="modal" id="modal">
-    <div class="dialog" role="dialog" aria-modal="true">
-      <h2 id="modal-title">You won!</h2>
-      <p id="modal-summary"></p>
-      <div style="height:12px"></div>
-      <button class="control" id="play-again">Play again</button>
-    </div>
+    <div class="dialog"><h2>You won!</h2><p id="modal-summary"></p><button class="control" id="play-again">Play again</button></div>
   </div>
 
   <script>
     (function(){
-      const ANIMALS = ['🦁','🐯','🐶','🐱','🐰','🦊','🐼','🐵','🐸','🐨','🐷','🐮','🐔','🦄','🐝','🐙','🦒','🐍'];
-      const PAIRS = 10; // 4x5 grid = 20 cards
-      const boardEl = document.getElementById('board');
-      const movesEl = document.getElementById('moves');
-      const timeEl = document.getElementById('time');
-      const matchedEl = document.getElementById('matched');
-      const restartBtn = document.getElementById('restart');
-      const modal = document.getElementById('modal');
-      const modalTitle = document.getElementById('modal-title');
-      const modalSummary = document.getElementById('modal-summary');
-      const playAgain = document.getElementById('play-again');
-      const bestEl = document.getElementById('best');
+      const THEMES={animals:['🦁','🐯','🐶','🐱','🐰','🦊','🐼','🐵','🐸','🐨','🐷','🐮','🐔','🦄','🐝','🐙','🦒','🐍'],plants:['🌿','🍀','🌱','🌻','🌷','🌵','🍄','🌾','🌼','🌺','🌹','🌳','🌴','🍁','🍂','🌸','🥀','🌲'],nature:['🌞','🌜','⭐','🌈','🔥','💧','⛄','🌪️','🌊','🌋','🌫️','🌎','🌧️','🌩️','🌤️','🌕','🌅','🌠']};
+      const boardEl=document.getElementById('board'),movesEl=document.getElementById('moves'),timeEl=document.getElementById('time'),matchedEl=document.getElementById('matched'),totalPairsEl=document.getElementById('totalPairs'),restartBtn=document.getElementById('restart'),modal=document.getElementById('modal'),setupModal=document.getElementById('setupModal'),playAgain=document.getElementById('play-again'),bestEl=document.getElementById('best'),startGame=document.getElementById('startGame');
+      let rows=5,cols=4,theme='animals',deck=[],firstCard=null,secondCard=null,lockBoard=false,moves=0,matched=0,timer=null,seconds=0;
 
-      let deck = [], firstCard=null, secondCard=null, lockBoard=false, moves=0, matched=0, timer=null, seconds=0;
-
-      function pickAnimals(){
-        const pool=[...ANIMALS];
-        for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
-        return pool.slice(0,PAIRS);
-      }
-      function buildDeck(){
-        const chosen=pickAnimals();
-        const doubled=[...chosen,...chosen];
-        for(let i=doubled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[doubled[i],doubled[j]]=[doubled[j],doubled[i]]}
-        deck=doubled.map((val,idx)=>({id:idx,face:val,matched:false}));
-      }
-
-      function render(){
-        boardEl.innerHTML='';
-        deck.forEach(card=>{
-          const el=document.createElement('div');
-          el.className='card';
-          el.dataset.id=card.id;
-          el.innerHTML=`<div class="card-inner"><div class="face front">❓</div><div class="face back">${card.face}</div></div>`;
-          boardEl.appendChild(el);
-        });
-        boardEl.querySelectorAll('.card').forEach(n=>{
-          n.addEventListener('click',onCardClick);
-          n.addEventListener('touchstart',onCardClick,{passive:true});
-        });
-      }
-
-      function startTimer(){if(timer) return;timer=setInterval(()=>{seconds++;timeEl.textContent=`Time: ${seconds}s`},1000);}
+      function pickIcons(){const pool=[...THEMES[theme]];for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}return pool.slice(0,(rows*cols)/2);}
+      function buildDeck(){const chosen=pickIcons(),doubled=[...chosen,...chosen];for(let i=doubled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[doubled[i],doubled[j]]=[doubled[j],doubled[i]]}deck=doubled.map((val,idx)=>({id:idx,face:val,matched:false}));boardEl.style.gridTemplateColumns=`repeat(${cols},1fr)`;}
+      function render(){boardEl.innerHTML='';deck.forEach(card=>{const el=document.createElement('div');el.className='card';el.dataset.id=card.id;el.innerHTML=`<div class="card-inner"><div class="face front">❓</div><div class="face back">${card.face}</div></div>`;boardEl.appendChild(el);el.addEventListener('click',onCardClick);});}
+      function startTimer(){if(timer)return;timer=setInterval(()=>{seconds++;timeEl.textContent=`Time: ${seconds}s`},1000);}
       function stopTimer(){if(timer){clearInterval(timer);timer=null}}
-
-      function onCardClick(e){
-        const el=e.currentTarget;if(lockBoard) return;const id=+el.dataset.id;const card=deck.find(c=>c.id===id);if(!card||card.matched)return;if(firstCard&&firstCard.id===id)return;
-        el.classList.add('flipped');
-        if(!firstCard){firstCard=card;startTimer();return;}
-        secondCard=card;lockBoard=true;moves++;movesEl.textContent=`Moves: ${moves}`;
-        if(firstCard.face===secondCard.face){markMatch(firstCard.id);markMatch(secondCard.id);matched++;matchedEl.textContent=`${matched}`;resetTurn();if(matched===PAIRS)win();}
-        else{setTimeout(()=>{document.querySelector(`[data-id='${firstCard.id}']`).classList.remove('flipped');document.querySelector(`[data-id='${secondCard.id}']`).classList.remove('flipped');resetTurn();},700);}
-      }
-
+      function onCardClick(e){const el=e.currentTarget;if(lockBoard)return;const id=+el.dataset.id;const card=deck.find(c=>c.id===id);if(!card||card.matched)return;if(firstCard&&firstCard.id===id)return;el.classList.add('flipped');if(!firstCard){firstCard=card;startTimer();return;}secondCard=card;lockBoard=true;moves++;movesEl.textContent=`Moves: ${moves}`;if(firstCard.face===secondCard.face){markMatch(firstCard.id);markMatch(secondCard.id);matched++;matchedEl.textContent=`${matched}`;resetTurn();if(matched===(rows*cols)/2)win();}else{setTimeout(()=>{document.querySelector(`[data-id='${firstCard.id}']`).classList.remove('flipped');document.querySelector(`[data-id='${secondCard.id}']`).classList.remove('flipped');resetTurn();},700);}}
       function markMatch(id){const card=deck.find(c=>c.id===id);if(card)card.matched=true;const el=document.querySelector(`[data-id='${id}']`);if(el)el.classList.add('matched');}
       function resetTurn(){firstCard=null;secondCard=null;lockBoard=false;}
-      function win(){stopTimer();modalTitle.textContent='You won!';modalSummary.textContent=`You matched all pairs in ${moves} moves and ${seconds}s.`;modal.classList.add('show');saveBest();}
-      function saveBest(){try{const best=JSON.parse(localStorage.getItem('animal-memory-best')||'null');const score={moves,seconds,date:new Date().toISOString()};if(!best||(seconds<best.seconds)||(seconds===best.seconds&&moves<best.moves))localStorage.setItem('animal-memory-best',JSON.stringify(score));updateBestUI();}catch(e){}}
-      function updateBestUI(){try{const best=JSON.parse(localStorage.getItem('animal-memory-best')||'null');best?bestEl.textContent=`${best.seconds}s • ${best.moves}m`:bestEl.textContent='—';}catch(e){bestEl.textContent='—'}}
-      function resetGame(){stopTimer();seconds=0;moves=0;matched=0;firstCard=null;secondCard=null;lockBoard=false;movesEl.textContent='Moves: 0';timeEl.textContent='Time: 0s';matchedEl.textContent='0';modal.classList.remove('show');buildDeck();render();}
+      function win(){stopTimer();modal.classList.add('show');}
+      function resetGame(){stopTimer();seconds=0;moves=0;matched=0;firstCard=null;secondCard=null;lockBoard=false;movesEl.textContent='Moves: 0';timeEl.textContent='Time: 0s';matchedEl.textContent='0';modal.classList.remove('show');buildDeck();render();totalPairsEl.textContent=(rows*cols)/2;}
 
-      restartBtn.addEventListener('click',resetGame);
-      playAgain.addEventListener('click',resetGame);
-      modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('show')});
+      restartBtn.addEventListener('click',()=>{setupModal.style.display='flex';});
+      playAgain.addEventListener('click',()=>{modal.classList.remove('show');setupModal.style.display='flex';});
+      startGame.addEventListener('click',()=>{theme=document.querySelector('input[name="theme"]:checked').value;setupModal.style.display='none';resetGame();});
 
-      updateBestUI();resetGame();
+      const rowsVal=document.getElementById('rowsVal'),colsVal=document.getElementById('colsVal');
+      document.getElementById('rowsPlus').onclick=()=>{if(rows<6){rows++;rowsVal.textContent=rows;}};
+      document.getElementById('rowsMinus').onclick=()=>{if(rows>2){rows--;rowsVal.textContent=rows;}};
+      document.getElementById('colsPlus').onclick=()=>{if(cols<6){cols++;colsVal.textContent=cols;}};
+      document.getElementById('colsMinus').onclick=()=>{if(cols>2){cols--;colsVal.textContent=cols;}};
+
+      setupModal.style.display='flex';
     })();
   </script>
 </body>
