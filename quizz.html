@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Quiz</title>
+  <style>
+    :root {
+      --primary: #0078ff;
+      --primary-dark: #005ecb;
+      --success: #2ecc71;
+      --error: #e74c3c;
+      --text: #222;
+      --bg-gradient: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    }
+
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--bg-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 15px;
+    }
+
+    .quiz-box {
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin: 1.2rem 0;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      background-color: #eef4ff;
+      color: var(--primary-dark);
+      border-radius: 8px;
+      padding: 4px 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .answer {
+      background: #eef2f7;
+      color: var(--text);
+      margin: 8px 0;
+    }
+
+    .answer:hover {
+      background-color: #dde8f5;
+    }
+
+    .selected {
+      background-color: var(--primary) !important;
+      color: white !important;
+    }
+
+    .correct {
+      background-color: var(--success) !important;
+      color: white !important;
+    }
+
+    .wrong {
+      background-color: var(--error) !important;
+      color: white !important;
+    }
+
+    #show {
+      background-color: var(--primary);
+      color: white;
+      margin-top: 12px;
+      font-weight: 500;
+    }
+
+    #show:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .difficulty-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .difficulty-buttons button {
+      flex: 1;
+      background-color: var(--primary);
+      color: white;
+      font-weight: 500;
+    }
+
+    .difficulty-buttons button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 400px) {
+      .quiz-box { padding: 18px; }
+      h1 { font-size: 1.4rem; }
+      h2 { font-size: 1rem; }
+      button { font-size: 0.95rem; padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-box">
+    <h1>🎯 Quick Quiz</h1>
+    <div class="meta">
+      <span id="category" class="badge">Loading...</span>
+      <span id="diff" class="badge"></span>
+    </div>
+    <h2 id="question">Loading...</h2>
+    <div id="options" class="answers"></div>
+    <button id="show">Show Solution</button>
+    <div class="difficulty-buttons">
+      <button data-diff="easy">Easy</button>
+      <button data-diff="medium">Medium</button>
+      <button data-diff="hard">Hard</button>
+    </div>
+  </div>
+
+  <script>
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const showBtn = document.getElementById('show');
+    const categoryEl = document.getElementById('category');
+    const diffEl = document.getElementById('diff');
+    let correctAnswer = '';
+    let selectedBtn = null;
+
+    const categories = [9, 17, 20, 21, 22, 23, 25, 27, 28];
+
+    function getRandomCategory() {
+      return categories[Math.floor(Math.random() * categories.length)];
+    }
+
+    function decodeHTML(str) {
+      const txt = document.createElement("textarea");
+      txt.innerHTML = str;
+      return txt.value;
+    }
+
+    async function loadQuiz(difficulty = 'medium') {
+      questionEl.textContent = 'Loading...';
+      optionsEl.innerHTML = '';
+      showBtn.disabled = true;
+      categoryEl.textContent = 'Loading...';
+      diffEl.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+
+      const category = getRandomCategory();
+      const url = `https://opentdb.com/api.php?amount=1&type=multiple&difficulty=${difficulty}&category=${category}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const q = data.results[0];
+
+      correctAnswer = decodeHTML(q.correct_answer);
+      questionEl.innerHTML = decodeHTML(q.question);
+      categoryEl.textContent = decodeHTML(q.category);
+
+      const allAnswers = [...q.incorrect_answers, q.correct_answer]
+        .map(decodeHTML)
+        .sort(() => Math.random() - 0.5);
+
+      allAnswers.forEach(ans => {
+        const btn = document.createElement('button');
+        btn.classList.add('answer');
+        btn.innerHTML = ans;
+        btn.onclick = () => selectAnswer(btn);
+        optionsEl.appendChild(btn);
+      });
+
+      showBtn.disabled = false;
+    }
+
+    function selectAnswer(btn) {
+      if (selectedBtn) selectedBtn.classList.remove('selected');
+      btn.classList.add('selected');
+      selectedBtn = btn;
+    }
+
+    showBtn.onclick = () => {
+      const buttons = document.querySelectorAll('.answer');
+      buttons.forEach(b => {
+        b.disabled = true;
+        if (b.innerHTML === correctAnswer) {
+          b.classList.add('correct');
+        } else if (b.classList.contains('selected')) {
+          b.classList.add('wrong');
+        }
+      });
+      showBtn.disabled = true;
+    };
+
+    document.querySelectorAll('.difficulty-buttons button').forEach(btn => {
+      btn.onclick = () => {
+        selectedBtn = null;
+        loadQuiz(btn.dataset.diff);
+      };
+    });
+
+    loadQuiz();
+  </script>
+</body>
+</html>
