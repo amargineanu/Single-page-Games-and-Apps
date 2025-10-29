@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Road Trip Would You Rather</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #a8edea, #fed6e3);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: background 0.5s;
+  }
+  header {
+    padding: 20px;
+    background-color: #ff6f61;
+    color: white;
+    font-size: 1.7rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .question-box {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    text-align: center;
+    transition: transform 0.5s, opacity 0.5s;
+  }
+  .question-box.fade-out {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  .question-box.fade-in {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .question-text {
+    font-size: 1.4rem;
+    margin-bottom: 25px;
+    font-weight: 600;
+  }
+  .choices {
+    font-size: 1.2rem;
+    text-align: left;
+    margin-bottom: 25px;
+    padding-left: 15px;
+  }
+  .choice {
+    margin-bottom: 15px;
+    background: #fce4ec;
+    padding: 12px 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: background 0.2s;
+  }
+  .choice:hover {
+    background: #f8bbd0;
+  }
+  #next-btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: #ff6f61;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background 0.2s, transform 0.2s;
+  }
+  #next-btn:hover {
+    background: #e55b4f;
+    transform: scale(1.05);
+  }
+  @media (max-width: 480px) {
+    .question-text { font-size: 1.2rem; }
+    .choices { font-size: 1rem; }
+    #next-btn { font-size: 1rem; padding: 12px 25px; }
+  }
+</style>
+</head>
+<body>
+
+<header>🚗 Road Trip: Would You Rather 🚗</header>
+
+<main>
+  <div class="question-box fade-in" id="question-box">
+    <div class="question-text" id="question-text">Loading question...</div>
+    <div class="choices" id="choices">
+      <div class="choice" id="choiceA">Option A</div>
+      <div class="choice" id="choiceB">Option B</div>
+    </div>
+    <button id="next-btn">Next Question</button>
+  </div>
+</main>
+
+<script>
+const fallbackQuestions = [
+  { A: "Teleport anywhere", B: "Time travel to the past" },
+  { A: "Sing instead of talk", B: "Dance instead of walk" },
+  { A: "Never use phone again", B: "Never use internet again" },
+  { A: "Explore space", B: "Explore the deep sea" }
+];
+
+async function fetchQuestion() {
+  try {
+    const res = await fetch('https://api.truthordarebot.xyz/api/wyr');
+    if (!res.ok) throw new Error("API fetch failed");
+    const data = await res.json();
+    const questionText = data.question || "";
+    let split = questionText.split(" or ");
+    if (split.length === 2) {
+      return { A: split[0].replace("Would you rather", "").trim(), B: split[1].trim() };
+    } else {
+      return fallbackQuestions[Math.floor(Math.random() * fallbackQuestions.length)];
+    }
+  } catch (err) {
+    console.warn("Using fallback question:", err);
+    return fallbackQuestions[Math.floor(Math.random() * fallbackQuestions.length)];
+  }
+}
+
+async function showNextQuestion() {
+  const box = document.getElementById('question-box');
+  box.classList.remove('fade-in');
+  box.classList.add('fade-out');
+
+  setTimeout(async () => {
+    const q = await fetchQuestion();
+    document.getElementById('question-text').innerText = "Would you rather...";
+    document.getElementById('choiceA').innerText = q.A;
+    document.getElementById('choiceB').innerText = q.B;
+
+    box.classList.remove('fade-out');
+    box.classList.add('fade-in');
+  }, 300);
+}
+
+document.getElementById('next-btn').addEventListener('click', showNextQuestion);
+
+// Load first question
+showNextQuestion();
+</script>
+
+</body>
+</html>
