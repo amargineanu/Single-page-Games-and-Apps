@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petrecerea lui Radu!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .age {
+            text-align: center;
+            font-size: 3em;
+            color: #764ba2;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+        }
+
+        .section h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            font-size: 1.3em;
+        }
+
+        .section p {
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+
+        .date-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .schedule-section {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .location-section {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .rsvp-button {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .rsvp-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .rsvp-button:active {
+            transform: translateY(0);
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--x), var(--y));
+            }
+        }
+
+        .football {
+            text-align: center;
+            font-size: 3em;
+            margin: 20px 0;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Ești Invitat! 🎉</h1>
+        <div class="age">Radu împlinește 10 ani!</div>
+        
+        <div class="football">⚽</div>
+
+        <div class="section date-section">
+            <h2><span class="icon">📅</span> Când?</h2>
+            <p><strong>Sâmbătă, 28 noiembrie</strong></p>
+            <p>Începem la <strong>ora 12:00 (amiază)</strong></p>
+        </div>
+
+        <div class="section schedule-section">
+            <h2><span class="icon">⏰</span> Programul</h2>
+            <p><strong>12:00 - 14:00:</strong> ⚽ Fotbal la Baza Sportivă din Gherogheni</p>
+            <p><strong>14:00 încolo:</strong> 🍜 Prânz & Tort la Wei Ramen</p>
+        </div>
+
+        <div class="section location-section">
+            <h2><span class="icon">📍</span> Unde lăsați & ridicați copiii</h2>
+            <p><strong>Lăsați copiii:</strong> Baza Sportivă din Gherogheni (ora 12:00)</p>
+            <p><strong>Ridicați copiii:</strong> Restaurantul Wei Ramen (în jur de ora 16:00)</p>
+        </div>
+
+        <div class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h2><span class="icon">💬</span> Confirmă Prezența</h2>
+            <p><strong>Trimite un mesaj pe WhatsApp către Dumitrita</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = '-20px';
+            confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            confetti.style.animation = `fall ${(Math.random() * 3 + 3)}s linear forwards`;
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 6000);
+        }
+
+        // Create continuous confetti
+        setInterval(createConfetti, 200);
+        
+        // Initial burst
+        for (let i = 0; i < 30; i++) {
+            setTimeout(createConfetti, i * 100);
+        }
+    </script>
+</body>
+</html>
