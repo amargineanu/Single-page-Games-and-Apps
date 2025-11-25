@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Petrecerea lui Radu!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,7 +13,7 @@
         }
 
         body {
-            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-family: 'Poppins', 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -61,19 +62,23 @@
         }
 
         h1 {
+            font-family: 'Fredoka', sans-serif;
             text-align: center;
             color: #667eea;
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: 700;
         }
 
         .age {
+            font-family: 'Fredoka', sans-serif;
             text-align: center;
             font-size: 3em;
             color: #764ba2;
             margin-bottom: 20px;
             animation: bounce 1s infinite;
+            font-weight: 700;
         }
 
         @keyframes bounce {
@@ -95,11 +100,13 @@
         }
 
         .section h2 {
+            font-family: 'Fredoka', sans-serif;
             font-size: 1.5em;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-weight: 600;
         }
 
         .icon {
@@ -174,6 +181,36 @@
             animation: spin 2s linear infinite;
         }
 
+        .icons-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .icon-item {
+            font-size: 3em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .icon-item:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .icon-item:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .icon-item:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -185,7 +222,11 @@
         <h1>🎉 Ești Invitat! 🎉</h1>
         <div class="age">Radu împlinește 10 ani!</div>
         
-        <div class="football">⚽</div>
+        <div class="icons-row">
+            <div class="icon-item">⚽</div>
+            <div class="icon-item">🍜</div>
+            <div class="icon-item">🍰</div>
+        </div>
 
         <div class="section date-section">
             <h2><span class="icon">📅</span> Când?</h2>
